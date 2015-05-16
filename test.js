@@ -16,6 +16,9 @@ for (let file of files) {
 		for (let target of targets) {
 			if (!fs.existsSync(path.join('out', target))) fs.mkdirSync(path.join('out', target));
 			let outfile = path.join('out', target, file.substr(0, file.lastIndexOf('.')));
+			if (target !== 'glsl') {
+				outfile = path.join('out', target, file.substr(0, file.lastIndexOf('.')) + '.' + target);
+			}
 			try {
 				child_process.execFileSync(path.normalize('../build/Debug/krafix.exe'), [target, path.join('in', file), outfile, 'temp', 'windows']);
 				if (target === 'glsl') {
