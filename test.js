@@ -6,16 +6,27 @@ let path = require('path');
 
 let files = fs.readdirSync('in');
 
+if (!fs.existsSync('out')) fs.mkdirSync('out');
+if (!fs.existsSync('temp')) fs.mkdirSync('temp');
+
 for (let file of files) {
 	if (file.endsWith('.glsl')) {
-		let outfile = path.join('out', file.substr(0, file.lastIndexOf('.')));
-		console.log('Compiling ' + file + " to " + outfile);
-		child_process.execFileSync(path.normalize('../build/Debug/krafix.exe'), ['glsl', path.join('in', file), outfile, 'temp', 'windows']);
-		try {
-			child_process.execFileSync(path.normalize('../glslang/Install/Windows/glslangValidator.exe'), [outfile]);
-		}
-		catch (error) {
-			console.log(error.stdout.toString().trim());
+		console.log('Compiling ' + file);
+		let targets = ['glsl', 'd3d9'];
+		for (let target of targets) {
+			if (!fs.existsSync(path.join('out', target))) fs.mkdirSync(path.join('out', target));
+			let outfile = path.join('out', target, file.substr(0, file.lastIndexOf('.')));
+			try {
+				child_process.execFileSync(path.normalize('../build/Debug/krafix.exe'), [target, path.join('in', file), outfile, 'temp', 'windows']);
+				if (target === 'glsl') {
+					child_process.execFileSync(path.normalize('../glslang/Install/Windows/glslangValidator.exe'), [outfile]);
+				}
+			}
+			catch (error) {
+				console.log('Error in ' + target + ' target.');
+				let errorstring = error.stdout.toString().trim();
+				if (errorstring.length > 0) console.log(errorstring);
+			}
 		}
 	}
 }
