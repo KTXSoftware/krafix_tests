@@ -20,7 +20,7 @@ varying vec3 normal;
 varying vec4 lPos;
 varying vec4 matcolor;
 
-float shadowSimple() {
+float shadowSimple(vec4 lPos) {
 
 	vec4 lPosH = lPos / lPos.w;
 	lPosH.x = lPosH.x / 2.0 + 0.5;
@@ -90,7 +90,7 @@ void kore() {
 
 	float visibility = 1.0;
 	if (receiveShadow && lPos.w > 0.0) {
-		visibility = 1.0;//shadowSimple();
+		visibility = 1.0;//shadowSimple(lPos);
 		//visibility = (visibility * 0.8) + 0.2;
 	}
 

@@ -42,7 +42,7 @@ vec4 skinningRead(float id) {
 	return res;
 }
 
-mat4 skinWorldMatrix() {
+mat4 skinWorldMatrix(vec4 bone) {
 	
 	float b;
 	float o = BINDS_OFFSET;
@@ -86,7 +86,7 @@ void kore() {
 
 	vec4 lv = vec4(vertexPosition, 1.0);
 	vec3 ln = vec3(normalPosition);
-	mat4 wm = (skinWorldMatrix());
+	mat4 wm = (skinWorldMatrix(bone));
 
 	norm = ln * mat3(wm);
 	//gl_Position = ((lv * wm) * viewMatrix) * projectionMatrix;
