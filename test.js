@@ -5,6 +5,8 @@ let fs = require('fs');
 let os = require('os');
 let path = require('path');
 
+let compiler = path.normalize('../build/Debug/krafix');
+//compiler = path.normalize('kfx');
 let files = fs.readdirSync('in');
 
 if (!fs.existsSync('out')) fs.mkdirSync('out');
@@ -24,7 +26,7 @@ for (let file of files) {
 				outfile = path.join('out', target, file.substr(0, file.lastIndexOf('.')) + '.' + target);
 			}
 			try {
-				child_process.execFileSync(path.normalize('../build/Debug/krafix'), [target, path.join('in', file), outfile, 'temp', 'windows']);
+				child_process.execFileSync(compiler, [target, path.join('in', file), outfile, 'temp', 'windows']);
 				if (target === 'glsl' && os.platform() === 'win32') {
 					child_process.execFileSync(path.normalize('../glslang/Install/Windows/glslangValidator.exe'), [outfile]);
 				}
